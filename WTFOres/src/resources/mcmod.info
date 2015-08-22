@@ -1,0 +1,16 @@
+[
+{
+  "modid": "WTFOres",
+  "name": "WhiskyTangoFox's Ores",
+  "description": "An Ore Generation Mod",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2365907-whiskytangofoxs-mods-cavebiomes-wtfs-tweaks-now",
+  "updateUrl": "",
+  "authorList": ["WhiskyTangoFox"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
