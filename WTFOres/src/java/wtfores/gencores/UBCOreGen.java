@@ -37,7 +37,7 @@ public class UBCOreGen extends VOreGen{
 
 	public void genFloatingStone(World world, int x, int y, int z, BlockSets.Modifier modifier){
 		BlockInfo blockandmeta = getUBCStone(world, x, y, z);
-		Block blockToSet = BlockSets.floorBlock.get(new BlockInfo(blockandmeta.block, blockandmeta.meta, modifier));
+		Block blockToSet = BlockSets.blockTransformer.get(new BlockInfo(blockandmeta.block, blockandmeta.meta, modifier));
 		if (blockToSet != null){
 			setBlockWithoutNotify(world, x, y+1, z, blockToSet, blockandmeta.meta);
 		}

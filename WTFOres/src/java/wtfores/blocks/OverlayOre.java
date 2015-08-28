@@ -7,6 +7,7 @@ import wtfcore.blocks.IAlphaMaskedBlock;
 import wtfcore.blocks.ChildBlockCustomMetadata;
 import wtfcore.items.ItemMetadataSubblock;
 import wtfcore.proxy.ClientProxy;
+import wtfcore.tweaksmethods.FracMethods;
 import wtfcore.utilities.BlockSets;
 import wtfcore.utilities.OreBlockInfo;
 import wtfcore.utilities.UBCblocks;
@@ -123,9 +124,8 @@ public class OverlayOre extends ChildBlockCustomMetadata implements IAlphaMasked
 				blockToRegister = new OverlayOre(oreBlock, parentMeta, loop, stoneBlock, oreType+loop, stoneNames, domain).setBlockName(name);
 				GameRegistry.registerBlock(blockToRegister, ItemMetadataSubblock.class, name);
 
-				BlockSets.addOreBlock(blockToRegister);
 				BlockSets.oreUbifier.put(new OreBlockInfo(oreBlock, parentMeta, stoneBlock, loop), blockToRegister);
-				BlockSets.addOreBlock(blockToRegister);
+				BlockSets.addOreBlock(blockToRegister, FracMethods.wtforesfrac);
 
 				blockArray[loop] = blockToRegister;
 			}

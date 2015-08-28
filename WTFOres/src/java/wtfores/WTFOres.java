@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import wtfcore.WTFCore;
 import wtfcore.WorldGenListener;
+import wtfcore.utilities.LangWriter;
 import wtfores.blocks.OverlayOre;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -62,7 +63,7 @@ public class WTFOres {
 		@EventHandler
 		public void PostInit(FMLPostInitializationEvent postEvent){
 			if (WTFOresConfig.genLangFile){
-				LangWriter.genLangFile(orenames);
+				LangWriter.genLangFile(orenames, "WTFOres_en_US.lang");
 			}
 			WorldGenListener.generator = new OreGenTweaked();
 

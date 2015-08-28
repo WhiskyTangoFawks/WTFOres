@@ -5,6 +5,7 @@ import java.util.Random;
 import cpw.mods.fml.common.registry.GameRegistry;
 import wtfcore.blocks.IAlphaMaskedBlock;
 import wtfcore.items.ItemMetadataSubblock;
+import wtfcore.tweaksmethods.FracMethods;
 import wtfcore.utilities.BlockSets;
 import wtfcore.utilities.OreBlockInfo;
 import wtfores.WTFOresConfig;
@@ -41,7 +42,7 @@ public class RedstoneOverlayOre extends OverlayOre implements IAlphaMaskedBlock{
 
 			//if (WTFOresConfig.genDenseOres){
 			BlockSets.oreUbifier.put(new OreBlockInfo(oreBlock, parentMeta, stoneBlock, loop), blockToRegister);
-			BlockSets.addOreBlock(blockToRegister);
+			BlockSets.addOreBlock(blockToRegister, FracMethods.wtforesfrac);
 
 			blockArray[loop] = blockToRegister;
 		}
