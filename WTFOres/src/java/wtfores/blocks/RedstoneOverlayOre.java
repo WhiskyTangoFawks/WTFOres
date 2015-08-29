@@ -53,13 +53,10 @@ public class RedstoneOverlayOre extends OverlayOre implements IAlphaMaskedBlock{
 		return blockArray;
 	}
 
-
-
 	@Override
 	public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int meta){
-
 		if (WTFOresConfig.enableDenseOres && this.oreLevel < 2){
-			Block blockToSet = BlockSets.oreUbifier.get(new OreBlockInfo (Blocks.lit_redstone_ore, this.parentMeta, this.stoneBlock, this.oreLevel+1));
+			Block blockToSet = BlockSets.oreUbifier.get(new OreBlockInfo (Blocks.lit_redstone_ore, this.oreMeta, this.stoneBlock, this.oreLevel+1));
 			if (blockToSet != null){
 				world.setBlock(x, y, z, blockToSet, meta, 0);
 			}
@@ -97,18 +94,19 @@ public class RedstoneOverlayOre extends OverlayOre implements IAlphaMaskedBlock{
 
         if (!isLit)
         {
-            Block blockToSet = BlockSets.oreUbifier.get(new OreBlockInfo(Blocks.lit_redstone_ore, this.parentMeta, this.stoneBlock, this.oreLevel));
+            Block blockToSet = BlockSets.oreUbifier.get(new OreBlockInfo(Blocks.lit_redstone_ore, this.oreMeta, this.stoneBlock, this.oreLevel));
         	world.setBlock(x, y, z, blockToSet, world.getBlockMetadata(x,y,z), 3);
         }
     }
     @Override
-	public void updateTick(World world, int x, int y, int z, Random p_149674_5_)
+	public void updateTick(World world, int x, int y, int z, Random random)
     {
         if (isLit)
         {
-        	Block blockToSet = BlockSets.oreUbifier.get(new OreBlockInfo(Blocks.redstone_ore, this.parentMeta, this.stoneBlock, this.oreLevel));
+        	Block blockToSet = BlockSets.oreUbifier.get(new OreBlockInfo(Blocks.redstone_ore, this.oreMeta, this.stoneBlock, this.oreLevel));
         	world.setBlock(x, y, z, blockToSet, world.getBlockMetadata(x, y, z), 0);
         }
+        super.updateTick(world, x, y, z, random);
     }
 
 

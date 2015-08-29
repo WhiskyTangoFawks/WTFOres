@@ -1,10 +1,8 @@
 package wtfores.blocks;
 
 import java.util.Iterator;
-import java.util.List;
 import org.apache.commons.lang3.text.WordUtils;
 import wtfcore.blocks.IAlphaMaskedBlock;
-import wtfcore.blocks.ChildBlockCustomMetadata;
 import wtfcore.items.ItemMetadataSubblock;
 import wtfcore.proxy.ClientProxy;
 import wtfcore.tweaksmethods.FracMethods;
@@ -20,62 +18,29 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
-public class OverlayOre extends ChildBlockCustomMetadata implements IAlphaMaskedBlock
+public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
 {
-
-	//This is designed to deal with mods with metadata- tcon ores, e.g. , will be split into 6 different blocks
-
-	protected String[] textureNames;
-	protected String[] parentLocations;
-	protected String oreType;
-	protected Block stoneBlock;
-	protected String[] localizedNames;
-
 	private IIcon[] textures;
-
 	public static String[] vanillaStone = {"stone"};
 	protected static String[] vanillaObsidian = {"obsidian"};
 	protected static String[] vanillaSand = {"sand"};
 	protected static String[] vanillaSandstone = {"sandstone"};
 	protected static String[] vanillaGravel = {"gravel"};
 
-	private static float [] vanillaStoneHardness = {1.5f};
-	private static float [] vanillaObsidianHardness = {25f};
-	private static float [] vanillaSandstoneHardness = {0.8f};
-	private static float [] vanillaSandHardness = {0.5f};
-
-	//private static Random random = new Random();
-	protected int oreLevel;
-	private float[] stoneHardness;
 
 	public  OverlayOre(Block oreBlock, int parentMeta, int oreLevel, Block stoneBlock, String oreType, String[] stoneNames, String domain){
-		super(oreBlock, parentMeta);
+		super(oreBlock, parentMeta, stoneBlock);
 
 		loadTextureStrings(oreType, stoneNames, domain);
-		this.stoneBlock  = stoneBlock;
+		
 		this.oreLevel = oreLevel;
-		if (this.parentBlock != Blocks.lit_redstone_ore){this.setCreativeTab(WTFOres.oreTab);}
-		if (this.stoneBlock == Blocks.stone){stoneHardness = vanillaStoneHardness;}
-		else if (this.stoneBlock == Blocks.sand){stoneHardness = vanillaSandHardness;}
-		else if (this.stoneBlock == Blocks.sandstone){stoneHardness = vanillaSandstoneHardness;}
-		else if (this.stoneBlock == Blocks.obsidian){stoneHardness = vanillaObsidianHardness;}
-		else if (Loader.isModLoaded("UndergroundBiomes") && this.stoneBlock == UBCblocks.IgneousStone){stoneHardness = UBCblocks.hardnessIgneousStone;}
-		else if (Loader.isModLoaded("UndergroundBiomes") && this.stoneBlock == UBCblocks.MetamorphicStone){stoneHardness = UBCblocks.hardnessMetamorphicStone;}
-		else if (Loader.isModLoaded("UndergroundBiomes") && this.stoneBlock == UBCblocks.SedimentaryStone){stoneHardness = UBCblocks.hardnessSedimentaryStone;}
+		//if (this.parentBlock != Blocks.lit_redstone_ore){this.setCreativeTab(WTFOres.oreTab);}
 	}
 
 	public void loadTextureStrings(String oreType, String[] stoneNames, String domain){
-
 		this.textureNames = new String[stoneNames.length];
 		this.parentLocations = new String[stoneNames.length];
 		this.localizedNames = new String[stoneNames.length];
@@ -161,7 +126,7 @@ public class OverlayOre extends ChildBlockCustomMetadata implements IAlphaMasked
 		//Iterates through all the config set ores
 		Iterator<AddCustomOre> iterator = WTFOresConfig.customOres.iterator();
 		while (iterator.hasNext()){
-			AddCustomOre newOre = (AddCustomOre)iterator.next();
+			AddCustomOre newOre = iterator.next();
 			registerOreSets(newOre.oreBlock, newOre.textureName, newOre.metadata);
 		}
 	}
@@ -182,66 +147,7 @@ public class OverlayOre extends ChildBlockCustomMetadata implements IAlphaMasked
 		return textures[meta];
 	}
 
-	@Override
-	public float getBlockHardness(World world, int x, int y, int z)
-	{
-		float oreLevelMod = (3F-oreLevel)/10F;
-		float hardness =oreLevelMod + stoneBlock.getBlockHardness(world, x, y, z) * (this.parentBlock.getHarvestLevel(this.parentMeta)+1F);
-		return hardness;
-	}
 
-	@Override
-	public boolean isFlammable(IBlockAccess world, int x, int y, int z, ForgeDirection face)
-	{
-		if (this.parentBlock == Blocks.coal_ore){
-			return true;
-		}
-		return parentBlock.getFlammability(world, x, y, z, face) > 0;
-	}
-	@Override
-	public int getFireSpreadSpeed(IBlockAccess world, int x, int y, int z, ForgeDirection face)
-	{
-		if (this.parentBlock == Blocks.coal_ore){
-			return Blocks.log.getFireSpreadSpeed(world, x, y, z, face);
-		}
-		return parentBlock.getFireSpreadSpeed(world, x, y, z, face);
-	}
-	@Override
-	public int getFlammability(IBlockAccess world, int x, int y, int z, ForgeDirection face)
-	{
-		if (this.parentBlock == Blocks.coal_ore){
-			return Blocks.log.getFlammability(world, x, y, z, face);
-		}
-		return Blocks.fire.getFlammability(this);
-	}
 
-	@Override
-	public int getHarvestLevel(int metadata)
-	{
-		return parentBlock.getHarvestLevel(metadata);
-	}
-	@Override
-	public void harvestBlock(World p_149636_1_, EntityPlayer p_149636_2_, int p_149636_3_, int p_149636_4_, int p_149636_5_, int p_149636_6_){
-		parentBlock.harvestBlock(p_149636_1_, p_149636_2_, p_149636_3_, p_149636_4_, p_149636_5_, parentMeta);;
-	}
-
-	@Override
-	public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int meta){
-
-		if (WTFOresConfig.enableDenseOres && this.oreLevel < 2){
-			Block blockToSet = BlockSets.oreUbifier.get(new OreBlockInfo (this.parentBlock, this.parentMeta, this.stoneBlock, this.oreLevel+1));
-			if (blockToSet != null){
-				world.setBlock(x, y, z, blockToSet, meta, 0);
-			}
-		}
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void getSubBlocks(Item item, CreativeTabs tab, List list){
-		for (int i = 0; i < this.textureNames.length; ++i)	{
-			list.add(new ItemStack(item, 1, i));
-		}
-	}
-
+	
 }
