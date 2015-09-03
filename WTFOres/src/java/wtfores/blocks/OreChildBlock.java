@@ -23,7 +23,7 @@ import wtfcore.WTFCore;
 import wtfcore.utilities.BlockSets;
 import wtfcore.utilities.OreBlockInfo;
 import wtfores.WTFOres;
-import wtfores.WTFOresConfig;
+import wtfores.config.WTFOresConfig;
 
 public class OreChildBlock extends Block {
 
@@ -112,9 +112,7 @@ public class OreChildBlock extends Block {
 
 	public void onBlockAdded(World world, int x, int y, int z)
 	{
-		WTFCore.log.info("Block added");
 		if (shouldFall){  
-			WTFCore.log.info("Calling update");
 			world.scheduleBlockUpdate(x, y, z, this, 2);
 		}
 	}
@@ -127,10 +125,8 @@ public class OreChildBlock extends Block {
 
 	public void updateTick(World world, int x, int y, int z, Random random)
 	{
-		WTFCore.log.info("Update tick");
 		if (shouldFall && !world.isRemote)
 		{
-			WTFCore.log.info("calling drop block");
 			this.dropBlock(world, x, y, z);
 		}
 	}
@@ -296,4 +292,10 @@ public class OreChildBlock extends Block {
     {
     	return stoneBlock.isToolEffective(type, metadata);
     }
+    
+    @SideOnly(Side.CLIENT)
+    public void randomDisplayTick(World world, int x, int y, int z, Random random) {
+    	oreBlock.randomDisplayTick(world, x, y, z, random);
+    }
+
 }

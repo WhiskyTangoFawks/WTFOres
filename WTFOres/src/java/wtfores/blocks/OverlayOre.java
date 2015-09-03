@@ -11,7 +11,7 @@ import wtfcore.utilities.OreBlockInfo;
 import wtfcore.utilities.UBCblocks;
 import wtfores.AddCustomOre;
 import wtfores.WTFOres;
-import wtfores.WTFOresConfig;
+import wtfores.config.WTFOresConfig;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;

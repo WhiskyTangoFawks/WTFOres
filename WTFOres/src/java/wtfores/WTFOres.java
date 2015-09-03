@@ -9,6 +9,7 @@ import wtfcore.WTFCore;
 import wtfcore.WorldGenListener;
 import wtfcore.utilities.LangWriter;
 import wtfores.blocks.OverlayOre;
+import wtfores.config.WTFOresConfig;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;

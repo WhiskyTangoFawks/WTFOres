@@ -1,11 +1,13 @@
 package wtfores;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
 
 public class AddCustomOre {
 
@@ -16,40 +18,45 @@ public class AddCustomOre {
 	public int metadata = 0;
 	public String textureName;
 	public int genType = 0;
-
-
-
+	public HashMap<BiomeDictionary.Type, Float> biomeModifier = new HashMap<BiomeDictionary.Type, Float>(); 
+	public HashSet<Integer> dimension = new HashSet<Integer>();
+	public HashSet<Block> stoneTypes;
+	
 	private float maxHeightPercent=100F;
+	private float minHeightPercent=0F;
+	private int maxPerChunk=-1;
+	private int minPerChunk=-1;
+	
 	public void setMaxHeightPercent(int var){
 		this.maxHeightPercent = (float)var/100F;
 	}
-
-	private float minHeightPercent=0F;
+	
 	public void setMinHeightPercent(int var){
 		this.minHeightPercent = (float)var/100F;
 	}
-
-	private int maxPerChunk=-1;
+	
 	public void setMaxPerChunk(int var){
 		this.maxPerChunk=var;
 	}
-
-	private int minPerChunk=-1;
+	
 	public void setMinPerChunk(int var){
 		this.minPerChunk=var;
 	}
 
-	public int getPerChunk(){
-		if (maxPerChunk==-1){return minPerChunk;}
-		else if (minPerChunk==-1){return maxPerChunk;}
+	public int getPerChunk(Type[] biome){
+		int genNumber;
+		if (maxPerChunk==-1){genNumber =  minPerChunk;}
+		else if (minPerChunk==-1){genNumber = maxPerChunk;}
 		else {
-			return random.nextInt(maxPerChunk-minPerChunk)+minPerChunk;
+			genNumber = random.nextInt(maxPerChunk-minPerChunk)+minPerChunk;
 		}
+		for (int loop=0; loop < biome.length; loop++){
+			if (biomeModifier.containsKey(biome[loop])){
+				genNumber*=biomeModifier.get(biome[loop]);
+			}
+		}		
+		return genNumber;
 	}
-
-
-	public HashSet<BiomeDictionary.Type> abundantBiomeTypes;
-
 
 	public int getHeight(int surface) {
 		int maxHeight = MathHelper.floor_float(maxHeightPercent*surface);
@@ -70,20 +77,17 @@ public class AddCustomOre {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime
-				* result
-				+ ((abundantBiomeTypes == null) ? 0 : abundantBiomeTypes
-						.hashCode());
+		result = prime * result + ((biomeModifier == null) ? 0 : biomeModifier.hashCode());
+		result = prime * result + ((dimension == null) ? 0 : dimension.hashCode());
 		result = prime * result + genType;
 		result = prime * result + Float.floatToIntBits(maxHeightPercent);
 		result = prime * result + maxPerChunk;
 		result = prime * result + metadata;
 		result = prime * result + Float.floatToIntBits(minHeightPercent);
 		result = prime * result + minPerChunk;
-		result = prime * result
-				+ ((oreBlock == null) ? 0 : oreBlock.hashCode());
-		result = prime * result
-				+ ((textureName == null) ? 0 : textureName.hashCode());
+		result = prime * result + ((oreBlock == null) ? 0 : oreBlock.hashCode());
+		result = prime * result + ((stoneTypes == null) ? 0 : stoneTypes.hashCode());
+		result = prime * result + ((textureName == null) ? 0 : textureName.hashCode());
 		result = prime * result + var1;
 		result = prime * result + var2;
 		return result;
@@ -98,22 +102,25 @@ public class AddCustomOre {
 		if (getClass() != obj.getClass())
 			return false;
 		AddCustomOre other = (AddCustomOre) obj;
-		if (abundantBiomeTypes == null) {
-			if (other.abundantBiomeTypes != null)
+		if (biomeModifier == null) {
+			if (other.biomeModifier != null)
 				return false;
-		} else if (!abundantBiomeTypes.equals(other.abundantBiomeTypes))
+		} else if (!biomeModifier.equals(other.biomeModifier))
+			return false;
+		if (dimension == null) {
+			if (other.dimension != null)
+				return false;
+		} else if (!dimension.equals(other.dimension))
 			return false;
 		if (genType != other.genType)
 			return false;
-		if (Float.floatToIntBits(maxHeightPercent) != Float
-				.floatToIntBits(other.maxHeightPercent))
+		if (Float.floatToIntBits(maxHeightPercent) != Float.floatToIntBits(other.maxHeightPercent))
 			return false;
 		if (maxPerChunk != other.maxPerChunk)
 			return false;
 		if (metadata != other.metadata)
 			return false;
-		if (Float.floatToIntBits(minHeightPercent) != Float
-				.floatToIntBits(other.minHeightPercent))
+		if (Float.floatToIntBits(minHeightPercent) != Float.floatToIntBits(other.minHeightPercent))
 			return false;
 		if (minPerChunk != other.minPerChunk)
 			return false;
@@ -121,6 +128,11 @@ public class AddCustomOre {
 			if (other.oreBlock != null)
 				return false;
 		} else if (!oreBlock.equals(other.oreBlock))
+			return false;
+		if (stoneTypes == null) {
+			if (other.stoneTypes != null)
+				return false;
+		} else if (!stoneTypes.equals(other.stoneTypes))
 			return false;
 		if (textureName == null) {
 			if (other.textureName != null)
@@ -134,8 +146,5 @@ public class AddCustomOre {
 		return true;
 	}
 
-
-
-
-
+	
 }

@@ -8,7 +8,7 @@ import wtfcore.items.ItemMetadataSubblock;
 import wtfcore.tweaksmethods.FracMethods;
 import wtfcore.utilities.BlockSets;
 import wtfcore.utilities.OreBlockInfo;
-import wtfores.WTFOresConfig;
+import wtfores.config.WTFOresConfig;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;

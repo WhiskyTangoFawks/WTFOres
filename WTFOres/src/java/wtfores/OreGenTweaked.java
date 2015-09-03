@@ -6,12 +6,15 @@ import wtfcore.utilities.BlockSets;
 import wtfcore.utilities.BlockInfo;
 import wtfcore.utilities.OreBlockInfo;
 import wtfcore.worldgen.IWTFGenerator;
+import wtfores.config.WTFOresConfig;
 import wtfores.gencores.GenOreProvider;
 import wtfores.gencores.VOreGen;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
 
 public class OreGenTweaked implements IWTFGenerator{
 
@@ -22,6 +25,7 @@ public class OreGenTweaked implements IWTFGenerator{
 	private Random random;
 	private float surfaceMod;
 	private VOreGen gen;
+	private Type[] biomeTypes;
 
 	@Override
 	public void generate(World world, int surface, int x, int z, Random random){
@@ -30,6 +34,7 @@ public class OreGenTweaked implements IWTFGenerator{
 		this.surface = surface;
 		this.chunkX =x;
 		this.chunkZ = z;
+		this.biomeTypes = BiomeDictionary.getTypesForBiome(world.getBiomeGenForCoords(chunkX, chunkZ));
 		this.random = random;
 		this.surfaceMod = surface/64F;
 		if (gen == null){
@@ -41,29 +46,32 @@ public class OreGenTweaked implements IWTFGenerator{
 		while (iterator.hasNext()){
 			AddCustomOre newOre = (AddCustomOre)iterator.next();
 
-			switch (newOre.genType){
+			if (newOre.dimension.contains(world.provider.dimensionId)){
 
-			case 0: // (Block oreBlock, int metadata, int counter, int numberOfBlocks, int maxHeight)
-				genDefault(newOre);
-				break;
-			case 1: // (Block oreBlock, int metadata, int counter, int maxHeight, int widthX, int widthZ)
-				genSheet(newOre);
-				break;
-			case 2: //  genthickVein(Block oreBlock, int metadata, int counter, int maxHeight, int baseLength)
-				genthickVein(newOre);
-				break;
-			case 3: // genDisperseVein(Block oreBlock, int metadata, int counter, int maxHeight, int baseLength)
-				genDisperseVein(newOre);
-				break;
-			case 4: // (Block oreBlock, int metadata, int counter, int height)
-				genSingle(newOre);
-				break;
-			case 5: // genVertical(Block oreBlock, int metadata, int counter, int maxHeight, int length)
-				genVertical(newOre);
-				break;
-			case 6: // genStar(Block oreBlock, int metadata, int counter, int height)
-				genStar (newOre);
-				break;
+				switch (newOre.genType){
+
+				case 0: // (Block oreBlock, int metadata, int counter, int numberOfBlocks, int maxHeight)
+					genDefault(newOre);
+					break;
+				case 1: // (Block oreBlock, int metadata, int counter, int maxHeight, int widthX, int widthZ)
+					genSheet(newOre);
+					break;
+				case 2: //  genthickVein(Block oreBlock, int metadata, int counter, int maxHeight, int baseLength)
+					genthickVein(newOre);
+					break;
+				case 3: // genDisperseVein(Block oreBlock, int metadata, int counter, int maxHeight, int baseLength)
+					genDisperseVein(newOre);
+					break;
+				case 4: // (Block oreBlock, int metadata, int counter, int height)
+					genSingle(newOre);
+					break;
+				case 5: // genVertical(Block oreBlock, int metadata, int counter, int maxHeight, int length)
+					genVertical(newOre);
+					break;
+				case 6: // genStar(Block oreBlock, int metadata, int counter, int height)
+					genStar (newOre);
+					break;
+				}
 
 			}
 		}
@@ -72,7 +80,7 @@ public class OreGenTweaked implements IWTFGenerator{
 	public void genDefault(AddCustomOre newOre){
 		Block oreBlock = newOre.oreBlock;
 		//int metadata = newOre.metadata;
-		int counter = MathHelper.floor_float(newOre.getPerChunk()*surfaceMod);
+		int counter = MathHelper.floor_float(newOre.getPerChunk(biomeTypes)*surfaceMod);
 		int numberOfBlocks = newOre.var1;
 
 		for (int fail = 0; counter > 0 && fail < 1000; fail++){
@@ -127,7 +135,7 @@ public class OreGenTweaked implements IWTFGenerator{
 	private void genSheet(AddCustomOre newOre){
 		Block oreBlock = newOre.oreBlock;
 		//int metadata = newOre.metadata;
-		int counter = MathHelper.floor_float(newOre.getPerChunk()*surfaceMod);
+		int counter = MathHelper.floor_float(newOre.getPerChunk(biomeTypes)*surfaceMod);
 
 		int widthX=newOre.var1;
 		int widthZ=newOre.var2;
@@ -165,7 +173,7 @@ public class OreGenTweaked implements IWTFGenerator{
 	private void genthickVein(AddCustomOre newOre){
 		Block oreBlock = newOre.oreBlock;
 		//int metadata = newOre.metadata;
-		int counter = MathHelper.floor_float(newOre.getPerChunk()*surfaceMod);
+		int counter = MathHelper.floor_float(newOre.getPerChunk(biomeTypes)*surfaceMod);
 		int baseLength = newOre.var1;
 
 
@@ -214,7 +222,7 @@ public class OreGenTweaked implements IWTFGenerator{
 
 		Block oreBlock = newOre.oreBlock;
 		//int metadata = newOre.metadata;
-		int counter = MathHelper.floor_float(newOre.getPerChunk()*surfaceMod);
+		int counter = MathHelper.floor_float(newOre.getPerChunk(biomeTypes)*surfaceMod);
 		int baseLength = newOre.var1;
 
 
@@ -257,7 +265,7 @@ public class OreGenTweaked implements IWTFGenerator{
 
 		Block oreBlock = newOre.oreBlock;
 		//int metadata = newOre.metadata;
-		int counter = MathHelper.floor_float(newOre.getPerChunk()*surfaceMod);
+		int counter = MathHelper.floor_float(newOre.getPerChunk(biomeTypes)*surfaceMod);
 		//int Height = newOre.getHeight(surface);
 		//if (BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(chunkX, chunkZ), Type.JUNGLE)){
 		//	diamond = -7;
@@ -285,7 +293,7 @@ public class OreGenTweaked implements IWTFGenerator{
 
 			Block oreBlock = newOre.oreBlock;
 			//int metadata = newOre.metadata;
-			int counter = MathHelper.floor_float(newOre.getPerChunk()*surfaceMod);
+			int counter = MathHelper.floor_float(newOre.getPerChunk(biomeTypes)*surfaceMod);
 
 			int length = newOre.var1;
 
@@ -324,7 +332,7 @@ public class OreGenTweaked implements IWTFGenerator{
 	private void genVerticalRedstone(AddCustomOre newOre){
 		Block oreBlock = newOre.oreBlock;
 		//int metadata = newOre.metadata;
-		int counter = MathHelper.floor_float(newOre.getPerChunk()*surfaceMod);
+		int counter = MathHelper.floor_float(newOre.getPerChunk(biomeTypes)*surfaceMod);
 
 		int length = newOre.var1;
 
@@ -370,7 +378,7 @@ public class OreGenTweaked implements IWTFGenerator{
 		//	loop = -3;
 		Block oreBlock = newOre.oreBlock;
 		int metadata = newOre.metadata;
-		int counter = MathHelper.floor_float(newOre.getPerChunk()*surfaceMod);
+		int counter = MathHelper.floor_float(newOre.getPerChunk(biomeTypes)*surfaceMod);
 
 
 		for (int fail = 0; fail < 1000 && counter > 0; fail ++){
