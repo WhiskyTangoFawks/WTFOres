@@ -61,12 +61,12 @@ public class ParseConfig {
 				}
 				else if (currentString[stringLoop].startsWith("biomeType=")){
 					String[] biometypestring = currentString[stringLoop].split("@");
-					
 					customOre.biomeModifier.put(BiomeDictionary.Type.valueOf(biometypestring[0].substring(10)), Float.parseFloat(biometypestring[1]));
 				}
 									
-				else if (currentString[stringLoop].startsWith("extraStoneType=")){
-					
+				else if (currentString[stringLoop].startsWith("stone=")){
+					String string = currentString[stringLoop].substring(6);
+					customOre.stoneTypes.add(string);
 				}
 				else if (currentString[stringLoop].startsWith("dimension=")){
 					customOre.dimension.add(Integer.parseInt(currentString[stringLoop].substring(10)));
@@ -87,6 +87,9 @@ public class ParseConfig {
 				//Checks to see if the user has specified a custom dimension- if not, then it sets to the default 0
 				if (customOre.dimension.isEmpty()){
 					customOre.dimension.add(0);
+				}
+				if (customOre.stoneTypes.isEmpty()){
+					customOre.stoneTypes.add("stone");
 				}
 				WTFOresConfig.customOres.add(customOre);
 				if (overrideTexture==null){overrideTexture=customOre.textureName;}

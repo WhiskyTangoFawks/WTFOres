@@ -20,12 +20,13 @@ public class AddCustomOre {
 	public int genType = 0;
 	public HashMap<BiomeDictionary.Type, Float> biomeModifier = new HashMap<BiomeDictionary.Type, Float>(); 
 	public HashSet<Integer> dimension = new HashSet<Integer>();
-	public HashSet<Block> stoneTypes;
+	public HashSet<String> stoneTypes = new HashSet<String>();
 	
 	private float maxHeightPercent=100F;
 	private float minHeightPercent=0F;
 	private int maxPerChunk=-1;
 	private int minPerChunk=-1;
+	
 	
 	public void setMaxHeightPercent(int var){
 		this.maxHeightPercent = (float)var/100F;

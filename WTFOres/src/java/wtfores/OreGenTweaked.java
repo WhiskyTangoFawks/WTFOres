@@ -3,6 +3,7 @@ package wtfores;
 import java.util.Iterator;
 import java.util.Random;
 import wtfcore.utilities.BlockSets;
+import wtfcore.WTFCore;
 import wtfcore.utilities.BlockInfo;
 import wtfcore.utilities.OreBlockInfo;
 import wtfcore.worldgen.IWTFGenerator;
@@ -29,7 +30,6 @@ public class OreGenTweaked implements IWTFGenerator{
 
 	@Override
 	public void generate(World world, int surface, int x, int z, Random random){
-
 		this.world = world;
 		this.surface = surface;
 		this.chunkX =x;

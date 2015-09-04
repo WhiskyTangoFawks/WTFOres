@@ -9,10 +9,10 @@ public class VanillOreGenCatcher {
 
 	@SubscribeEvent
 	public void catchOreGen(GenerateMinable event){
-		if (event.world.provider.dimensionId == 0 &&
+		if (
 				(event.type== EventType.COAL) || (event.type== EventType.IRON) ||
 			(event.type== EventType.GOLD) || (event.type== EventType.DIAMOND) ||
-			(event.type== EventType.LAPIS) || (event.type== EventType.REDSTONE)){
+			(event.type== EventType.LAPIS) || (event.type== EventType.REDSTONE) || event.type == EventType.QUARTZ){
 			event.setResult(Event.Result.DENY);
 		}
 	}

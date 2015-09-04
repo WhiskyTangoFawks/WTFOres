@@ -31,10 +31,10 @@ public class WTFOresConfig {
 		String genIron = config.get("Vanilla Ores", "Vanilla iron generation", "oreBlock=minecraft:iron_ore,useTexture=iron_ore,genType=2,v1=8,maxHeightPercent=75,minPerChunk=80").getString();
 		ParseConfig.parse(genIron);
 
-		String genDiamond = config.get("Vanilla Ores", "Vanilla diamond generation", "oreBlock=minecraft:diamond_ore,useTexture=diamond_ore,genType=4,maxHeightPercent=33,minPerChunk=8").getString();
+		String genDiamond = config.get("Vanilla Ores", "Vanilla diamond generation", "oreBlock=minecraft:diamond_ore,useTexture=diamond_ore,genType=4,maxHeightPercent=33,minPerChunk=8,stone=stone,stone=obsidian").getString();
 		ParseConfig.parse(genDiamond);
 
-		String genRedstone = config.get("Vanilla Ores", "Vanilla redstone generation", "oreBlock=minecraft:redstone_ore,useTexture=redstone_ore,genType=5,v1=6,maxHeightPercent=40,minPerChunk=8").getString();
+		String genRedstone = config.get("Vanilla Ores", "Vanilla redstone generation", "oreBlock=minecraft:redstone_ore,useTexture=redstone_ore,genType=5,v1=6,maxHeightPercent=40,minPerChunk=8,stone=stone,stone=sand").getString();
 		ParseConfig.parse(genRedstone);
 
 		String genLapis = config.get("Vanilla Ores", "Vanilla lapis generation", "oreBlock=minecraft:lapis_ore,useTexture=lapis_ore,genType=6,maxHeightPercent=52,minPerChunk=8").getString();
@@ -45,7 +45,10 @@ public class WTFOresConfig {
 
 		String genEmerald = config.get("Vanilla Ores", "Vanilla emerald generation", "oreBlock=minecraft:emerald_ore,useTexture=emerald_ore,genType=4,maxHeightPercent=95,minPerChunk=0,maxPerChunk=5").getString();
 		ParseConfig.parse(genEmerald);
-
+		
+		String genQuartz = config.get("Vanilla Ores", "Vanilla quartz generation", "oreBlock=minecraft:quartz_ore,useTexture=quartz_ore,genType=6,maxHeightPercent=110,minPerChunk=90,maxPerChunk=160,stone=netherrack,dimension=-1").getString();
+		ParseConfig.parse(genQuartz);
+		
 		if (Loader.isModLoaded("TConstruct")){
 			String tconDefault = "oreBlock=TConstruct:SearedBrick,metadata=5,useTexture=aluminum_ore,genType=2,maxHeightPercent=75,minPerChunk=50,v1=10,overrideTexture=ore_aluminum;"
 								+ "oreBlock=TConstruct:SearedBrick,metadata=3,useTexture=copper_ore,genType=3,maxHeightPerent=90,minPerChunk=65,v1=10,overrideTexture=ore_copper;"

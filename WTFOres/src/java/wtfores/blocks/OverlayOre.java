@@ -2,7 +2,10 @@ package wtfores.blocks;
 
 import java.util.Iterator;
 import org.apache.commons.lang3.text.WordUtils;
+
+import wtfcore.WTFCore;
 import wtfcore.blocks.IAlphaMaskedBlock;
+import wtfcore.blocks.OreChildBlock;
 import wtfcore.items.ItemMetadataSubblock;
 import wtfcore.proxy.ClientProxy;
 import wtfcore.tweaksmethods.FracMethods;
@@ -20,24 +23,25 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 
 public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
 {
 	private IIcon[] textures;
 	public static String[] vanillaStone = {"stone"};
-	protected static String[] vanillaObsidian = {"obsidian"};
-	protected static String[] vanillaSand = {"sand"};
-	protected static String[] vanillaSandstone = {"sandstone"};
-	protected static String[] vanillaGravel = {"gravel"};
+
 
 
 	public  OverlayOre(Block oreBlock, int parentMeta, int oreLevel, Block stoneBlock, String oreType, String[] stoneNames, String domain){
 		super(oreBlock, parentMeta, stoneBlock);
 
+	
 		loadTextureStrings(oreType, stoneNames, domain);
 		
 		this.oreLevel = oreLevel;
-		//if (this.parentBlock != Blocks.lit_redstone_ore){this.setCreativeTab(WTFOres.oreTab);}
+		if (stoneBlock != Blocks.lit_redstone_ore){
+			this.setCreativeTab(WTFOres.oreTab);
+		}
 	}
 
 	public void loadTextureStrings(String oreType, String[] stoneNames, String domain){
@@ -101,8 +105,8 @@ public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
 			return blockArray;
 		}
 	}
-
-	public static void registerOreSets(Block oreBlock, String oreType, int parentMeta){
+/*
+	public static void rgisterOreSets(Block oreBlock, String oreType, int parentMeta){
 
 		registerOverlaidOre(oreBlock, parentMeta, oreType, Blocks.stone, "stone", vanillaStone, "minecraft");
 		if (Loader.isModLoaded("UndergroundBiomes"))
@@ -115,22 +119,65 @@ public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
 			registerOverlaidOre(oreBlock, parentMeta, oreType, Blocks.gravel, "gravel", vanillaGravel, "minecraft");
 		}
 	}
+	*/
 
 	public static void register(){
-		//Extra sets with non-stone backgrounds
-		registerOverlaidOre(Blocks.diamond_ore, 0, "diamond_ore", Blocks.obsidian, "obsidian", vanillaObsidian, "minecraft");
-		registerOverlaidOre(Blocks.redstone_ore, 0, "redstone_ore", Blocks.sand, "sand", vanillaSand, "minecraft");
-		//PROBLEM: sandstone is a sided block, and my texturer cannot currently handle sided blocks
-		//registerOverlaidOre(Blocks.redstone_ore, 0, "redstone_ore", Blocks.sandstone, "sandstone", vanillaSandstone, "minecraft");
 
 		//Iterates through all the config set ores
 		Iterator<AddCustomOre> iterator = WTFOresConfig.customOres.iterator();
 		while (iterator.hasNext()){
 			AddCustomOre newOre = iterator.next();
-			registerOreSets(newOre.oreBlock, newOre.textureName, newOre.metadata);
+
+			//iterates through the stone types hashset in the new ore
+			Iterator<String> stoneTypeIterator = newOre.stoneTypes.iterator();
+			while (stoneTypeIterator.hasNext()){
+				String stoneTypeString = stoneTypeIterator.next();
+				//WTFCore.log.info("stone type generating " + stoneTypeString);
+				if (stoneTypeString.equals("stone")){
+					registerStoneOreSet(newOre.oreBlock, newOre.textureName, newOre.metadata);
+				}
+				else if (stoneTypeString.equals("sand")){
+					//add red sand, and red sandstone
+					String[] nameArray = {"sand"};
+					String[] nameArray2 = {"sandstone"};
+					registerOverlaidOre(newOre.oreBlock, 0, newOre.textureName, Blocks.sand, "sand", nameArray, "minecraft");
+					//registerOverlaidOre(newOre.oreBlock, 0, newOre.textureName, Blocks.sandstone, "sandstone_side", nameArray2, "minecraft");
+				}
+				else if (stoneTypeString.equals("gravel")){
+					String[] nameArray = {"gravel"};
+					registerOverlaidOre(newOre.oreBlock, 0, newOre.textureName, Blocks.gravel, "gravel", nameArray, "minecraft");
+				}
+				else if (stoneTypeString.equals("obsidian")){
+					String[] nameArray = {"obsidian"};
+					registerOverlaidOre(newOre.oreBlock, 0, newOre.textureName, Blocks.obsidian, "obsidian", nameArray, "minecraft");
+				}
+				else if (stoneTypeString.equals("netherrack")){
+					
+					String[] nameArray = {"netherrack"};
+					registerOverlaidOre(newOre.oreBlock, 0, newOre.textureName, Blocks.netherrack, "netherrack", nameArray, "minecraft");
+				}
+				else if (stoneTypeString.equals("dirt")){
+					String[] nameArray = {"dirt"};
+					registerOverlaidOre(newOre.oreBlock, 0, newOre.textureName, Blocks.dirt, "dirt", nameArray, "minecraft");
+				}
+				else {
+					WTFCore.log.info("WTFOres: Unable to recognise stone type:" +stoneTypeString+".");
+				}
+			}
+			
 		}
 	}
-
+		
+	public static void registerStoneOreSet(Block oreBlock, String oreType, int parentMeta){
+		registerOverlaidOre(oreBlock, parentMeta, oreType, Blocks.stone, "stone", vanillaStone, "minecraft");
+		if (Loader.isModLoaded("UndergroundBiomes"))
+		{
+			registerOverlaidOre(oreBlock, parentMeta, oreType, UBCblocks.IgneousStone, "igneous", UBCblocks.IgneousStoneList, "undergroundbiomes");
+			registerOverlaidOre(oreBlock, parentMeta, oreType, UBCblocks.MetamorphicStone, "metamorphic", UBCblocks.MetamorphicStoneList, "undergroundbiomes");
+			registerOverlaidOre(oreBlock, parentMeta, oreType, UBCblocks.SedimentaryStone, "sedimentary", UBCblocks.SedimentaryStoneList, "undergroundbiomes");
+		}
+	}
+	
 	@Override
 	public void registerBlockIcons(IIconRegister iconRegister){
 		textures = new IIcon[16];
@@ -148,6 +195,14 @@ public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
 	}
 
 
-
+	@Override
+	public void onBlockDestroyedByPlayer(World world, int x, int y, int z, int meta){
+		if (WTFOresConfig.enableDenseOres && this.oreLevel < 2){
+			Block blockToSet = BlockSets.oreUbifier.get(new OreBlockInfo (this.oreBlock, this.oreMeta, this.stoneBlock, this.oreLevel+1));
+			if (blockToSet != null){
+				world.setBlock(x, y, z, blockToSet, meta, 0);
+			}
+		}
+	}
 	
 }
