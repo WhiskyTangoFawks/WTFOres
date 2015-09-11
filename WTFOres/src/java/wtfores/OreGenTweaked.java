@@ -2,10 +2,11 @@ package wtfores;
 
 import java.util.Iterator;
 import java.util.Random;
-import wtfcore.utilities.BlockSets;
+
 import wtfcore.WTFCore;
-import wtfcore.utilities.BlockInfo;
-import wtfcore.utilities.OreBlockInfo;
+import wtfcore.api.BlockInfo;
+import wtfcore.api.BlockSets;
+import wtfcore.api.OreBlockInfo;
 import wtfcore.worldgen.IWTFGenerator;
 import wtfores.config.WTFOresConfig;
 import wtfores.gencores.GenOreProvider;

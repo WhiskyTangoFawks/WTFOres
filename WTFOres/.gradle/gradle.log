@@ -10,11 +10,9 @@
 :apiClasses UP-TO-DATE
 :sourceMainJava
 :compileJavawarning: [options] bootstrap class path not set in conjunction with -source 1.6
-Note: C:\Users\Wayne\git\WTForesRepository\WTFOres\build\sources\java\wtfores\blocks\OreChildBlock.java uses unchecked or unsafe operations.
-Note: Recompile with -Xlint:unchecked for details.
 1 warning
 
-:processResources UP-TO-DATE
+:processResources
 :classes
 :jar
 :compileTestJava UP-TO-DATE
@@ -32,4 +30,4 @@ Note: Recompile with -Xlint:unchecked for details.
 
 BUILD SUCCESSFUL
 
-Total time: 35.285 secs
+Total time: 8.281 secs

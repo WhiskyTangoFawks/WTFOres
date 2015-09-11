@@ -1,11 +1,12 @@
 package wtfores.gencores;
 
 import java.util.Random;
-import wtfcore.utilities.BlockInfo;
+
 import cpw.mods.fml.common.Loader;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import wtfcore.api.BlockInfo;
 
 
 public class VOreGen {

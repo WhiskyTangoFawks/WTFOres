@@ -4,13 +4,15 @@ import java.util.Iterator;
 import org.apache.commons.lang3.text.WordUtils;
 
 import wtfcore.WTFCore;
+import wtfcore.api.BlockSets;
+import wtfcore.api.FracMethods;
+import wtfcore.api.IStoneRegister;
+import wtfcore.api.OreBlockInfo;
 import wtfcore.blocks.IAlphaMaskedBlock;
 import wtfcore.blocks.OreChildBlock;
 import wtfcore.items.ItemMetadataSubblock;
 import wtfcore.proxy.ClientProxy;
-import wtfcore.tweaksmethods.FracMethods;
-import wtfcore.utilities.BlockSets;
-import wtfcore.utilities.OreBlockInfo;
+import wtfcore.utilities.LoadBlockSets;
 import wtfcore.utilities.UBCblocks;
 import wtfores.AddCustomOre;
 import wtfores.WTFOres;
@@ -75,26 +77,26 @@ public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
         return block;
     }
 
-	public static Block[] registerOverlaidOre(Block oreBlock, int parentMeta, String oreType, Block stoneBlock, String stoneGeoType, String[] stoneNames, String domain){
+	public static Block[] registerOverlaidOre(Block oreBlock, int parentMeta, String oreType, Block stoneBlock, String unlocalisedName, String[] stoneNames, String domain){
 
 		Block[] blockArray = new Block[3];
 		Block blockToRegister= null;
 
 		//this shunts the registry into redstone if it detects the block to be registered is redstone
 		if (oreBlock == Blocks.redstone_ore){
-			RedstoneOverlayOre.registerOverlaidOre(Blocks.lit_redstone_ore, parentMeta, "lit_redstone_ore", stoneBlock, stoneGeoType, stoneNames, domain);
-			return RedstoneOverlayOre.registerOverlaidOre(oreBlock, parentMeta, oreType, stoneBlock, stoneGeoType, stoneNames, domain);
+			RedstoneOverlayOre.registerOverlaidOre(Blocks.lit_redstone_ore, parentMeta, "lit_redstone_ore", stoneBlock, unlocalisedName, stoneNames, domain);
+			return RedstoneOverlayOre.registerOverlaidOre(oreBlock, parentMeta, oreType, stoneBlock, unlocalisedName, stoneNames, domain);
 		}
 
 		else {
 			for (int loop = 2; loop > -1; loop--){
-				String name = oreType+loop+"_"+stoneGeoType;
+				String name = oreType+loop+"_"+unlocalisedName;
 
 				blockToRegister = new OverlayOre(oreBlock, parentMeta, loop, stoneBlock, oreType+loop, stoneNames, domain).setBlockName(name);
 				GameRegistry.registerBlock(blockToRegister, ItemMetadataSubblock.class, name);
 
 				BlockSets.oreUbifier.put(new OreBlockInfo(oreBlock, parentMeta, stoneBlock, loop), blockToRegister);
-				BlockSets.addOreBlock(blockToRegister, FracMethods.wtforesfrac);
+				LoadBlockSets.addOreBlock(blockToRegister, FracMethods.wtforesfrac);
 
 				blockArray[loop] = blockToRegister;
 			}
@@ -102,6 +104,8 @@ public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
 			BlockSets.oreUbifier.put(new OreBlockInfo(oreBlock, parentMeta, stoneBlock, -1), blockToRegister);
 			BlockSets.oreUbifier.put(new OreBlockInfo(oreBlock, parentMeta, stoneBlock, -2), blockToRegister);
 			BlockSets.oreUbifier.put(new OreBlockInfo(oreBlock, parentMeta, stoneBlock, -3), blockToRegister);
+			
+			BlockSets.genReplace.put(oreBlock, Blocks.stone);
 			return blockArray;
 		}
 	}
@@ -138,27 +142,32 @@ public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
 				}
 				else if (stoneTypeString.equals("sand")){
 					//add red sand, and red sandstone
+					//Issue: sandstone is a block with multiple textures, so I've disabled it until I figure out what to do about it
 					String[] nameArray = {"sand"};
 					String[] nameArray2 = {"sandstone"};
-					registerOverlaidOre(newOre.oreBlock, 0, newOre.textureName, Blocks.sand, "sand", nameArray, "minecraft");
+					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, Blocks.sand, "sand", nameArray, "minecraft");
 					//registerOverlaidOre(newOre.oreBlock, 0, newOre.textureName, Blocks.sandstone, "sandstone_side", nameArray2, "minecraft");
 				}
 				else if (stoneTypeString.equals("gravel")){
 					String[] nameArray = {"gravel"};
-					registerOverlaidOre(newOre.oreBlock, 0, newOre.textureName, Blocks.gravel, "gravel", nameArray, "minecraft");
+					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, Blocks.gravel, "gravel", nameArray, "minecraft");
 				}
 				else if (stoneTypeString.equals("obsidian")){
 					String[] nameArray = {"obsidian"};
-					registerOverlaidOre(newOre.oreBlock, 0, newOre.textureName, Blocks.obsidian, "obsidian", nameArray, "minecraft");
+					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, Blocks.obsidian, "obsidian", nameArray, "minecraft");
 				}
 				else if (stoneTypeString.equals("netherrack")){
 					
 					String[] nameArray = {"netherrack"};
-					registerOverlaidOre(newOre.oreBlock, 0, newOre.textureName, Blocks.netherrack, "netherrack", nameArray, "minecraft");
+					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, Blocks.netherrack, "netherrack", nameArray, "minecraft");
 				}
 				else if (stoneTypeString.equals("dirt")){
 					String[] nameArray = {"dirt"};
-					registerOverlaidOre(newOre.oreBlock, 0, newOre.textureName, Blocks.dirt, "dirt", nameArray, "minecraft");
+					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, Blocks.dirt, "dirt", nameArray, "minecraft");
+				}
+				else if (BlockSets.stoneRegisters.containsKey(stoneTypeString)){
+					IStoneRegister stoneregister = BlockSets.stoneRegisters.get(stoneTypeString);
+					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, stoneregister.stone, stoneregister.unlocalisedName, stoneregister.stoneTextureNames, stoneregister.domain);
 				}
 				else {
 					WTFCore.log.info("WTFOres: Unable to recognise stone type:" +stoneTypeString+".");

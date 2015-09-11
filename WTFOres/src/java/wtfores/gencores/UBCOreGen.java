@@ -1,8 +1,9 @@
 package wtfores.gencores;
 
 import java.util.Random;
-import wtfcore.utilities.BlockInfo;
-import wtfcore.utilities.BlockSets;
+
+import wtfcore.api.BlockInfo;
+import wtfcore.api.BlockSets;
 import cpw.mods.fml.common.Loader;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;

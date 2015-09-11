@@ -46,7 +46,7 @@ public class WTFOresConfig {
 		String genEmerald = config.get("Vanilla Ores", "Vanilla emerald generation", "oreBlock=minecraft:emerald_ore,useTexture=emerald_ore,genType=4,maxHeightPercent=95,minPerChunk=0,maxPerChunk=5").getString();
 		ParseConfig.parse(genEmerald);
 		
-		String genQuartz = config.get("Vanilla Ores", "Vanilla quartz generation", "oreBlock=minecraft:quartz_ore,useTexture=quartz_ore,genType=6,maxHeightPercent=110,minPerChunk=90,maxPerChunk=160,stone=netherrack,dimension=-1").getString();
+		String genQuartz = config.get("Vanilla Ores", "Vanilla quartz generation", "oreBlock=minecraft:quartz_ore,useTexture=quartz_ore,genType=6,maxHeightPercent=100,minPerChunk=90,maxPerChunk=160,stone=netherrack,dimension=-1").getString();
 		ParseConfig.parse(genQuartz);
 		
 		if (Loader.isModLoaded("TConstruct")){
