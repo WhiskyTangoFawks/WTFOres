@@ -61,7 +61,9 @@ public class ParseConfig {
 				}
 				else if (currentString[stringLoop].startsWith("biomeType=")){
 					String[] biometypestring = currentString[stringLoop].split("@");
-					customOre.biomeModifier.put(BiomeDictionary.Type.valueOf(biometypestring[0].substring(10)), Float.parseFloat(biometypestring[1]));
+					String string = biometypestring[0].substring(10);
+					BiomeDictionary.Type biome = BiomeDictionary.Type.getType(string, BiomeDictionary.Type.values());
+					customOre.biomeModifier.put((biome), Float.parseFloat(biometypestring[1]));
 				}
 									
 				else if (currentString[stringLoop].startsWith("stone=")){

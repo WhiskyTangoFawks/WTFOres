@@ -3,11 +3,14 @@ package wtfores;
 import java.util.Iterator;
 import java.util.Random;
 
+import cavebiomes.blocks.CaveBlocks;
+import wtfcore.InterModBlocks;
 import wtfcore.WTFCore;
 import wtfcore.api.BlockInfo;
 import wtfcore.api.BlockSets;
 import wtfcore.api.OreBlockInfo;
 import wtfcore.worldgen.IWTFGenerator;
+import wtfores.blocks.RedstoneOverlayOre;
 import wtfores.config.WTFOresConfig;
 import wtfores.gencores.GenOreProvider;
 import wtfores.gencores.VOreGen;
@@ -339,39 +342,87 @@ public class OreGenTweaked implements IWTFGenerator{
 
 		for (int fail = 0; counter > 0 && fail < 1000; fail ++){
 
-			int height = newOre.getHeight(surface);
+
 
 			float slopeXY = (random.nextFloat()-0.5F) /3;
 			float slopeZY = (random.nextFloat()-0.5F) /3;
 			int startX = random.nextInt(6)+8;
 			int startZ = random.nextInt(6)+8;
 			length = length + random.nextInt(5)+random.nextInt(5)-4;
+			int height = newOre.getHeight(surface)+length;
 			//int numLoop= 1;
 
 			//if (BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(chunkX, chunkZ), Type.SANDY)){
 			//	height = height + random.nextInt(10);
 			//	length = length + 5;
 			//}
-			int y = height;
+
 			int x = MathHelper.floor_double(chunkX+startX);
 			int z = MathHelper.floor_double(chunkZ+startZ);
+			
+				for (int loopY = 0; loopY < length; loopY++){
 
-			for (int loopY = 0; loopY < length; loopY++){
+					x = MathHelper.floor_double(chunkX+startX + slopeXY*loopY);
+					z = MathHelper.floor_double(chunkZ+startZ + slopeZY*loopY);
+					int y = height - loopY;
 
-				x = MathHelper.floor_double(chunkX+startX + slopeXY*loopY);
-				z = MathHelper.floor_double(chunkZ+startZ + slopeZY*loopY);
-				y = height - loopY;
+					int densityToSet = random.nextInt(3);
 
-				int densityToSet = random.nextInt(3);
+					if (!WTFOresConfig.enableDenseOres){densityToSet = 0;}
 
-				if (!WTFOresConfig.enableDenseOres){densityToSet = 0;}
-				if (genOre(world, oreBlock, newOre.metadata, x, y, z, densityToSet)){
-					counter--;
+					if (genOre(world, oreBlock, newOre.metadata, x, y, z, densityToSet)){
+						counter--;
+
+						//Now, after setting it's ore, it checks if the block below is air, if it is, it goes into stalactie generation
+						if (InterModBlocks.gen != null && world.isAirBlock(x, y-1, z) && loopY+1 < length){
+							int size = length-loopY+1;
+							y--;
+							Block down1;
+							
+							Block[] speleothemSet = InterModBlocks.unlitRedstoneSpeleothems;
+							int stalactiteCounter = 0;
+
+							for (int i = 0; i < size; i++){
+								down1 = world.getBlock(x, (y-i-1), z);
+
+								if (i==0){//if this is the first loop
+
+									if (size>1 && down1 == Blocks.air) {//if the size is larger than one, and there's space
+										gen.setBlockWithoutNotify(world,x, y-i, z, speleothemSet[1], 0);//set large base
+										stalactiteCounter++;
+									}
+									else {
+										gen.setBlockWithoutNotify(world,x, y-i, z, speleothemSet[0], 0);//set small base
+										stalactiteCounter++;
+									}
+								}
+								else if (i<size-1 && down1 == Blocks.air){//if this isn't the last block, and there's space
+									gen.setBlockWithoutNotify(world,x, y-i, z, speleothemSet[3], 0);//set a column
+									stalactiteCounter++;
+								}
+								else{//this is the last block
+									if (genOre(world, oreBlock, newOre.metadata, x, y-i-1, z, densityToSet)){
+										gen.setBlockWithoutNotify(world,x, y-i, z, speleothemSet[5], 0);//set a stalagmite base
+										stalactiteCounter++;
+										stalactiteCounter++;
+									}
+
+									else{
+										gen.setBlockWithoutNotify(world,x, y-i, z, speleothemSet[2], 0);//set a stalactite tip
+										stalactiteCounter++;
+									}
+								}
+							}
+							counter += stalactiteCounter;
+							height -= stalactiteCounter;
+							length -= stalactiteCounter;
+						}
+					}
+
 				}
 			}
 		}
-	}
-
+	
 	private void genStar(AddCustomOre newOre){
 
 		//int loop = 0;
