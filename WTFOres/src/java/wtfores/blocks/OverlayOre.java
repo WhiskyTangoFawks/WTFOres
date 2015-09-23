@@ -18,6 +18,7 @@ import wtfores.AddCustomOre;
 import wtfores.WTFOres;
 import wtfores.config.WTFOresConfig;
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -77,7 +78,7 @@ public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
         return block;
     }
 
-	public static Block[] registerOverlaidOre(Block oreBlock, int parentMeta, String oreType, Block stoneBlock, String unlocalisedName, String[] stoneNames, String domain){
+	public static Block[] registerOverlaidOre(Block oreBlock, int parentMeta, String oreType, Block stoneBlock, String unlocalisedName, String[] stoneNames, String domain, boolean ubify){
 
 		Block[] blockArray = new Block[3];
 		Block blockToRegister= null;
@@ -90,12 +91,22 @@ public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
 
 		else {
 			for (int loop = 2; loop > -1; loop--){
-				String name = oreType+loop+"_"+unlocalisedName;
+				
+				String[] oreDomain = GameData.getBlockRegistry().getNameForObject(oreBlock).split(":");
+				String name = "ore"+oreDomain[0]+"_"+oreType+loop+"_"+unlocalisedName;
+				WTFCore.log.info("Ore Domain = " + oreDomain[0]);
 
 				blockToRegister = new OverlayOre(oreBlock, parentMeta, loop, stoneBlock, oreType+loop, stoneNames, domain).setBlockName(name);
 				GameRegistry.registerBlock(blockToRegister, ItemMetadataSubblock.class, name);
 
+				if (ubify){
+					
+				}
+				else{
+					
+				}
 				BlockSets.oreUbifier.put(new OreBlockInfo(oreBlock, parentMeta, stoneBlock, loop), blockToRegister);
+				
 				LoadBlockSets.addOreBlock(blockToRegister, FracMethods.wtforesfrac);
 
 				blockArray[loop] = blockToRegister;
@@ -105,25 +116,17 @@ public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
 			BlockSets.oreUbifier.put(new OreBlockInfo(oreBlock, parentMeta, stoneBlock, -2), blockToRegister);
 			BlockSets.oreUbifier.put(new OreBlockInfo(oreBlock, parentMeta, stoneBlock, -3), blockToRegister);
 			
-			BlockSets.genReplace.put(oreBlock, Blocks.stone);
+			if (ubify){
+				BlockSets.genReplace.put(oreBlock, blockToRegister);
+			}
+			else {
+				BlockSets.genReplace.put(oreBlock, Blocks.stone);
+			}
+			
 			return blockArray;
 		}
 	}
-/*
-	public static void rgisterOreSets(Block oreBlock, String oreType, int parentMeta){
 
-		registerOverlaidOre(oreBlock, parentMeta, oreType, Blocks.stone, "stone", vanillaStone, "minecraft");
-		if (Loader.isModLoaded("UndergroundBiomes"))
-		{
-			registerOverlaidOre(oreBlock, parentMeta, oreType, UBCblocks.IgneousStone, "igneous", UBCblocks.IgneousStoneList, "undergroundbiomes");
-			registerOverlaidOre(oreBlock, parentMeta, oreType, UBCblocks.MetamorphicStone, "metamorphic", UBCblocks.MetamorphicStoneList, "undergroundbiomes");
-			registerOverlaidOre(oreBlock, parentMeta, oreType, UBCblocks.SedimentaryStone, "sedimentary", UBCblocks.SedimentaryStoneList, "undergroundbiomes");
-		}
-		if (Loader.isModLoaded("TConstruct") && (oreType == "iron_ore" ||oreType == "gold_ore" ||oreType == "copper_ore" ||oreType == "aluminum_ore" ||oreType == "tin_ore" )){
-			registerOverlaidOre(oreBlock, parentMeta, oreType, Blocks.gravel, "gravel", vanillaGravel, "minecraft");
-		}
-	}
-	*/
 
 	public static void register(){
 
@@ -131,43 +134,46 @@ public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
 		Iterator<AddCustomOre> iterator = WTFOresConfig.customOres.iterator();
 		while (iterator.hasNext()){
 			AddCustomOre newOre = iterator.next();
-
+			boolean ubify = false;
+			if (newOre.genType == -1){
+				ubify = true;
+			}
 			//iterates through the stone types hashset in the new ore
 			Iterator<String> stoneTypeIterator = newOre.stoneTypes.iterator();
 			while (stoneTypeIterator.hasNext()){
 				String stoneTypeString = stoneTypeIterator.next();
 				//WTFCore.log.info("stone type generating " + stoneTypeString);
 				if (stoneTypeString.equals("stone")){
-					registerStoneOreSet(newOre.oreBlock, newOre.textureName, newOre.metadata);
+					registerStoneOreSet(newOre.oreBlock, newOre.textureName, newOre.metadata, ubify);
 				}
 				else if (stoneTypeString.equals("sand")){
 					//add red sand, and red sandstone
 					//Issue: sandstone is a block with multiple textures, so I've disabled it until I figure out what to do about it
 					String[] nameArray = {"sand"};
 					String[] nameArray2 = {"sandstone"};
-					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, Blocks.sand, "sand", nameArray, "minecraft");
+					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, Blocks.sand, "sand", nameArray, "minecraft", ubify);
 					//registerOverlaidOre(newOre.oreBlock, 0, newOre.textureName, Blocks.sandstone, "sandstone_side", nameArray2, "minecraft");
 				}
 				else if (stoneTypeString.equals("gravel")){
 					String[] nameArray = {"gravel"};
-					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, Blocks.gravel, "gravel", nameArray, "minecraft");
+					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, Blocks.gravel, "gravel", nameArray, "minecraft", ubify);
 				}
 				else if (stoneTypeString.equals("obsidian")){
 					String[] nameArray = {"obsidian"};
-					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, Blocks.obsidian, "obsidian", nameArray, "minecraft");
+					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, Blocks.obsidian, "obsidian", nameArray, "minecraft", ubify);
 				}
 				else if (stoneTypeString.equals("netherrack")){
 					
 					String[] nameArray = {"netherrack"};
-					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, Blocks.netherrack, "netherrack", nameArray, "minecraft");
+					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, Blocks.netherrack, "netherrack", nameArray, "minecraft", ubify);
 				}
 				else if (stoneTypeString.equals("dirt")){
 					String[] nameArray = {"dirt"};
-					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, Blocks.dirt, "dirt", nameArray, "minecraft");
+					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, Blocks.dirt, "dirt", nameArray, "minecraft", ubify);
 				}
 				else if (BlockSets.stoneRegisters.containsKey(stoneTypeString)){
 					IStoneRegister stoneregister = BlockSets.stoneRegisters.get(stoneTypeString);
-					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, stoneregister.stone, stoneregister.unlocalisedName, stoneregister.stoneTextureNames, stoneregister.domain);
+					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, stoneregister.stone, stoneregister.unlocalisedName, stoneregister.stoneTextureNames, stoneregister.domain, ubify);
 				}
 				else {
 					WTFCore.log.info("WTFOres: Unable to recognise stone type:" +stoneTypeString+".");
@@ -177,13 +183,13 @@ public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
 		}
 	}
 		
-	public static void registerStoneOreSet(Block oreBlock, String oreType, int parentMeta){
-		registerOverlaidOre(oreBlock, parentMeta, oreType, Blocks.stone, "stone", vanillaStone, "minecraft");
+	public static void registerStoneOreSet(Block oreBlock, String oreType, int parentMeta, boolean ubify){
+		registerOverlaidOre(oreBlock, parentMeta, oreType, Blocks.stone, "stone", vanillaStone, "minecraft", ubify);
 		if (Loader.isModLoaded("UndergroundBiomes"))
 		{
-			registerOverlaidOre(oreBlock, parentMeta, oreType, UBCblocks.IgneousStone, "igneous", UBCblocks.IgneousStoneList, "undergroundbiomes");
-			registerOverlaidOre(oreBlock, parentMeta, oreType, UBCblocks.MetamorphicStone, "metamorphic", UBCblocks.MetamorphicStoneList, "undergroundbiomes");
-			registerOverlaidOre(oreBlock, parentMeta, oreType, UBCblocks.SedimentaryStone, "sedimentary", UBCblocks.SedimentaryStoneList, "undergroundbiomes");
+			registerOverlaidOre(oreBlock, parentMeta, oreType, UBCblocks.IgneousStone, "igneous", UBCblocks.IgneousStoneList, "undergroundbiomes", ubify);
+			registerOverlaidOre(oreBlock, parentMeta, oreType, UBCblocks.MetamorphicStone, "metamorphic", UBCblocks.MetamorphicStoneList, "undergroundbiomes", ubify);
+			registerOverlaidOre(oreBlock, parentMeta, oreType, UBCblocks.SedimentaryStone, "sedimentary", UBCblocks.SedimentaryStoneList, "undergroundbiomes", ubify);
 		}
 	}
 	

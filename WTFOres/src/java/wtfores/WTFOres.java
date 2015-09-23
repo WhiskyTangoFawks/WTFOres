@@ -6,8 +6,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import wtfcore.WTFCore;
-import wtfcore.WorldGenListener;
 import wtfcore.utilities.LangWriter;
+import wtfcore.worldgen.WorldGenListener;
 import wtfores.blocks.OverlayOre;
 import wtfores.config.WTFOresConfig;
 import cpw.mods.fml.common.Mod;
@@ -19,7 +19,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod(modid = WTFOres.modid, name = "WhiskyTangoFox's Ores", version = "1.41", dependencies = "after:UndergroundBiomes;after:TConstructs;required-after:WTFCore@[1.61,);after:WTFTweaks")
+@Mod(modid = WTFOres.modid, name = "WhiskyTangoFox's Ores", version = "1.43", dependencies = "after:UndergroundBiomes;after:TConstructs;required-after:WTFCore@[1.61,);after:WTFTweaks")
 public class WTFOres {
 
 		public static  final String modid = WTFCore.WTFOres;

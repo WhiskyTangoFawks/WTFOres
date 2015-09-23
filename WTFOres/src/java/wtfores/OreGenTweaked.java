@@ -2,15 +2,12 @@ package wtfores;
 
 import java.util.Iterator;
 import java.util.Random;
-
-import cavebiomes.blocks.CaveBlocks;
 import wtfcore.InterModBlocks;
 import wtfcore.WTFCore;
 import wtfcore.api.BlockInfo;
 import wtfcore.api.BlockSets;
 import wtfcore.api.OreBlockInfo;
 import wtfcore.worldgen.IWTFGenerator;
-import wtfores.blocks.RedstoneOverlayOre;
 import wtfores.config.WTFOresConfig;
 import wtfores.gencores.GenOreProvider;
 import wtfores.gencores.VOreGen;
@@ -342,8 +339,6 @@ public class OreGenTweaked implements IWTFGenerator{
 
 		for (int fail = 0; counter > 0 && fail < 1000; fail ++){
 
-
-
 			float slopeXY = (random.nextFloat()-0.5F) /3;
 			float slopeZY = (random.nextFloat()-0.5F) /3;
 			int startX = random.nextInt(6)+8;
@@ -374,48 +369,54 @@ public class OreGenTweaked implements IWTFGenerator{
 						counter--;
 
 						//Now, after setting it's ore, it checks if the block below is air, if it is, it goes into stalactie generation
-						if (InterModBlocks.gen != null && world.isAirBlock(x, y-1, z) && loopY+1 < length){
-							int size = length-loopY+1;
+						if (InterModBlocks.gen != null && world.isAirBlock(x, y-1, z)){
+							int blocksRemaining = length-loopY;
 							y--;
-							Block down1;
-							
+	
 							Block[] speleothemSet = InterModBlocks.unlitRedstoneSpeleothems;
 							int stalactiteCounter = 0;
+							int numToSet;
 
-							for (int i = 0; i < size; i++){
-								down1 = world.getBlock(x, (y-i-1), z);
-
-								if (i==0){//if this is the first loop
-
-									if (size>1 && down1 == Blocks.air) {//if the size is larger than one, and there's space
-										gen.setBlockWithoutNotify(world,x, y-i, z, speleothemSet[1], 0);//set large base
-										stalactiteCounter++;
+							//setting the base
+							if (blocksRemaining>1 && world.isAirBlock(x, y-1, z)) {//if the size is larger than one, and there's space
+								numToSet = 1;//large base
+								}
+							else {
+								numToSet = 0; //small base
+							}
+							
+							boolean endLoop = false;
+							for (int i = 1; i < blocksRemaining && (!endLoop); i++){
+								boolean isDown1Air = world.isAirBlock(x, y-(i+1), z);
+								
+								if (isDown1Air){
+									if (i == blocksRemaining-1){//if this is the last block
+										numToSet=2; //tip
+										endLoop = true;
 									}
 									else {
-										gen.setBlockWithoutNotify(world,x, y-i, z, speleothemSet[0], 0);//set small base
-										stalactiteCounter++;
+										numToSet=3;//column
 									}
 								}
-								else if (i<size-1 && down1 == Blocks.air){//if this isn't the last block, and there's space
-									gen.setBlockWithoutNotify(world,x, y-i, z, speleothemSet[3], 0);//set a column
-									stalactiteCounter++;
-								}
-								else{//this is the last block
-									if (genOre(world, oreBlock, newOre.metadata, x, y-i-1, z, densityToSet)){
-										gen.setBlockWithoutNotify(world,x, y-i, z, speleothemSet[5], 0);//set a stalagmite base
-										stalactiteCounter++;
-										stalactiteCounter++;
+								else { //down1 != air
+									if (genOre(world, oreBlock, newOre.metadata, x, y-(i+1), z, densityToSet)){//if the not air block can be set to an ore
+										counter++;
+										height--;
+										length --;
+										numToSet=5;		
+										endLoop = true;
 									}
-
-									else{
-										gen.setBlockWithoutNotify(world,x, y-i, z, speleothemSet[2], 0);//set a stalactite tip
-										stalactiteCounter++;
+									else {//the not air block cannot be set to ore
+										numToSet=2; //tip
+										endLoop = true;
 									}
 								}
+								
+								gen.setBlockWithoutNotify(world,x, y-i, z, speleothemSet[numToSet], 0);
+								counter++;
+								height--;
+								length --;
 							}
-							counter += stalactiteCounter;
-							height -= stalactiteCounter;
-							length -= stalactiteCounter;
 						}
 					}
 
