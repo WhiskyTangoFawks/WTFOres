@@ -19,7 +19,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod(modid = WTFOres.modid, name = "WhiskyTangoFox's Ores", version = "1.43", dependencies = "after:UndergroundBiomes;after:TConstructs;required-after:WTFCore@[1.61,);after:WTFTweaks")
+@Mod(modid = WTFOres.modid, name = "WhiskyTangoFox's Ores", version = "1.44", dependencies = "after:UndergroundBiomes;after:TConstructs;required-after:WTFCore@[1.62,);after:WTFTweaks")
 public class WTFOres {
 
 		public static  final String modid = WTFCore.WTFOres;
@@ -50,19 +50,21 @@ public class WTFOres {
 		@EventHandler
 		public void PreInit(FMLPreInitializationEvent preEvent)
 		{
-			WTFOresConfig.customConfig();
+			
 
 		}
 
 		@EventHandler public void load(FMLInitializationEvent event)
 		{
-			OverlayOre.register();
+			
 			MinecraftForge.ORE_GEN_BUS.register(new VanillOreGenCatcher());
 
 		}
 		
 		@EventHandler
 		public void PostInit(FMLPostInitializationEvent postEvent){
+			WTFOresConfig.customConfig();
+			OverlayOre.register();
 			if (WTFOresConfig.genLangFile){
 				LangWriter.genLangFile(orenames, "WTFOres_en_US.lang");
 			}

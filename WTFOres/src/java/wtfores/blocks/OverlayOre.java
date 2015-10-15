@@ -5,7 +5,6 @@ import org.apache.commons.lang3.text.WordUtils;
 
 import wtfcore.WTFCore;
 import wtfcore.api.BlockSets;
-import wtfcore.api.FracMethods;
 import wtfcore.api.IStoneRegister;
 import wtfcore.api.OreBlockInfo;
 import wtfcore.blocks.IAlphaMaskedBlock;
@@ -106,8 +105,7 @@ public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
 					
 				}
 				BlockSets.oreUbifier.put(new OreBlockInfo(oreBlock, parentMeta, stoneBlock, loop), blockToRegister);
-				
-				LoadBlockSets.addOreBlock(blockToRegister, FracMethods.wtforesfrac);
+				LoadBlockSets.addOreBlock(blockToRegister);
 
 				blockArray[loop] = blockToRegister;
 			}
@@ -173,7 +171,7 @@ public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
 				}
 				else if (BlockSets.stoneRegisters.containsKey(stoneTypeString)){
 					IStoneRegister stoneregister = BlockSets.stoneRegisters.get(stoneTypeString);
-					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, stoneregister.stone, stoneregister.unlocalisedName, stoneregister.stoneTextureNames, stoneregister.domain, ubify);
+					registerOverlaidOre(newOre.oreBlock, newOre.metadata, newOre.textureName, IStoneRegister.stone, IStoneRegister.unlocalisedName, IStoneRegister.stoneTextureNames, IStoneRegister.domain, ubify);
 				}
 				else {
 					WTFCore.log.info("WTFOres: Unable to recognise stone type:" +stoneTypeString+".");

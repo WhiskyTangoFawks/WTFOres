@@ -384,6 +384,10 @@ public class OreGenTweaked implements IWTFGenerator{
 							else {
 								numToSet = 0; //small base
 							}
+							gen.setBlockWithoutNotify(world,x, y, z, speleothemSet[numToSet], 0);
+							counter++;
+							height--;
+							length --;
 							
 							boolean endLoop = false;
 							for (int i = 1; i < blocksRemaining && (!endLoop); i++){
