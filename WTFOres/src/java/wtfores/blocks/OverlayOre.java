@@ -4,6 +4,7 @@ import java.util.Iterator;
 import org.apache.commons.lang3.text.WordUtils;
 
 import wtfcore.WTFCore;
+import wtfcore.api.AddCustomOre;
 import wtfcore.api.BlockSets;
 import wtfcore.api.IStoneRegister;
 import wtfcore.api.OreBlockInfo;
@@ -13,7 +14,6 @@ import wtfcore.items.ItemMetadataSubblock;
 import wtfcore.proxy.ClientProxy;
 import wtfcore.utilities.LoadBlockSets;
 import wtfcore.utilities.UBCblocks;
-import wtfores.AddCustomOre;
 import wtfores.WTFOres;
 import wtfores.config.WTFOresConfig;
 import cpw.mods.fml.common.Loader;

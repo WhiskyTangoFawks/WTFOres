@@ -7,5 +7,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/WTFCore"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/UBC"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/WTFCaveBiomes"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/WTFTweaks"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

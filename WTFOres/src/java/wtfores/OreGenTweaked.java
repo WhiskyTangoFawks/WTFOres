@@ -1,12 +1,15 @@
 package wtfores;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 import wtfcore.InterModBlocks;
 import wtfcore.WTFCore;
+import wtfcore.api.AddCustomOre;
 import wtfcore.api.BlockInfo;
 import wtfcore.api.BlockSets;
 import wtfcore.api.OreBlockInfo;
+import wtfcore.utilities.CavePosition;
 import wtfcore.worldgen.IWTFGenerator;
 import wtfores.config.WTFOresConfig;
 import wtfores.gencores.GenOreProvider;
@@ -28,9 +31,10 @@ public class OreGenTweaked implements IWTFGenerator{
 	private float surfaceMod;
 	private VOreGen gen;
 	private Type[] biomeTypes;
+	private ArrayList<CavePosition> cavepositions;
 
 	@Override
-	public void generate(World world, int surface, int x, int z, Random random){
+	public void generate(World world, int surface, int x, int z, Random random, ArrayList<CavePosition> cavepositions){
 		this.world = world;
 		this.surface = surface;
 		this.chunkX =x;
@@ -41,8 +45,9 @@ public class OreGenTweaked implements IWTFGenerator{
 		if (gen == null){
 			gen = GenOreProvider.getGenCore();
 		}
+		this.cavepositions = cavepositions;
 
-
+		
 		Iterator<AddCustomOre> iterator = WTFOresConfig.customOres.iterator();
 		while (iterator.hasNext()){
 			AddCustomOre newOre = (AddCustomOre)iterator.next();
@@ -72,11 +77,15 @@ public class OreGenTweaked implements IWTFGenerator{
 				case 6: // genStar(Block oreBlock, int metadata, int counter, int height)
 					genStar (newOre);
 					break;
+				case 7: //cave floor generation
+					genCaveFloor(newOre);
+					break;
 				}
-
 			}
 		}
 	}
+
+
 
 	public void genDefault(AddCustomOre newOre){
 		Block oreBlock = newOre.oreBlock;
@@ -453,6 +462,25 @@ public class OreGenTweaked implements IWTFGenerator{
 					if (genOre(world, oreBlock, metadata, x,y-1,z,random.nextInt(3))){counter--;}
 					if (genOre(world, oreBlock, metadata, x,y,z+1,random.nextInt(3))){counter--;}
 					if (genOre(world, oreBlock, metadata, x,y,z-1,random.nextInt(3))){counter--;}
+				}
+			}
+		}
+	}
+
+	private void genCaveFloor(AddCustomOre newOre) {
+		int counter = 0;
+		if (cavepositions.size() > 0){
+			int chance = 16384/newOre.getPerChunk(biomeTypes);
+
+			for (int loop = 0; loop < cavepositions.size(); loop++){
+
+				if (random.nextInt(chance) == 0){
+					CavePosition pos = cavepositions.get(random.nextInt(cavepositions.size()));
+					int densityToSet = random.nextInt(3);
+					if (!WTFOresConfig.enableDenseOres){densityToSet = 0;}
+					if (genOre(world, newOre.oreBlock, newOre.metadata, pos.x, pos.floor, pos.z, densityToSet)){
+						counter++;
+					}
 				}
 			}
 		}

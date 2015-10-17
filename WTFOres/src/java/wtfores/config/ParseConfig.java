@@ -4,8 +4,8 @@ import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.BiomeDictionary;
 import wtfcore.WTFCore;
+import wtfcore.api.AddCustomOre;
 import wtfcore.proxy.ClientProxy;
-import wtfores.AddCustomOre;
 import wtfores.WTFOres;
 
 public class ParseConfig {

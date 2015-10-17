@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.HashSet;
 import net.minecraftforge.common.config.Configuration;
 import wtfcore.WTFCore;
-import wtfores.AddCustomOre;
+import wtfcore.api.AddCustomOre;
 import cpw.mods.fml.common.Loader;
 
 public class WTFOresConfig {
