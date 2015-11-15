@@ -19,7 +19,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod(modid = WTFOres.modid, name = "WhiskyTangoFox's Ores", version = "1.44", dependencies = "after:UndergroundBiomes;after:TConstructs;required-after:WTFCore@[1.62,);after:WTFTweaks")
+@Mod(modid = WTFOres.modid, name = "WhiskyTangoFox's Ores", version = "1.45", dependencies = "after:UndergroundBiomes;after:TConstructs;required-after:WTFCore@[1.62,);after:WTFTweaks")
 public class WTFOres {
 
 		public static  final String modid = WTFCore.WTFOres;

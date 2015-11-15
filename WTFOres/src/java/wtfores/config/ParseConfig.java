@@ -3,6 +3,7 @@ package wtfores.config;
 import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.common.BiomeDictionary;
+import texturegeneratorlib.TextureGeneratorLib;
 import wtfcore.WTFCore;
 import wtfcore.api.AddCustomOre;
 import wtfcore.proxy.ClientProxy;
@@ -95,7 +96,7 @@ public class ParseConfig {
 				}
 				WTFOresConfig.customOres.add(customOre);
 				if (overrideTexture==null){overrideTexture=customOre.textureName;}
-				ClientProxy.registerBlockOverlayOverride(customOre.oreBlock, overrideTexture, "minecraft:stone", customOre.textureName+0, WTFOres.overlayDomain, false);
+				TextureGeneratorLib.registerBlockOverlayOverride(customOre.oreBlock, overrideTexture, "minecraft:stone", customOre.textureName+0, WTFOres.overlayDomain, false);
 			}
 		}
 	}

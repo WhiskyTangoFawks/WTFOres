@@ -58,7 +58,7 @@ public class WTFOresConfig {
 		}
 
 		if (Loader.isModLoaded(WTFCore.WTFTweaks)){
-			String wtftweaksDefault ="oreBlock=WTFTweaks:sulfur_ore,metadata=0,useTexture=sulfur_ore,genType=1,maxHeightPercent=110,minPerChunk=20,v1=3,v2=3;oreBlock=WTFTweaks:nitre_ore,metadata=0,useTexture=nitre_ore,genType=0,maxHeightPercent=66,minPerChunk=60,v1=8";
+			String wtftweaksDefault ="oreBlock=WTFTweaks:nitre_ore,metadata=0,useTexture=nitre_ore,genType=7,maxHeightPercent=90,minPerChunk=90,stone=stone,stone=gravel,stone=dirt,stone=sand;stone=sandstone";
 			String genWTFTweaks = config.get("WTFTweaks", "WTFTweaks ore generation has been overriden", wtftweaksDefault).getString();
 			ParseConfig.parse(genWTFTweaks);
 		}

@@ -468,20 +468,24 @@ public class OreGenTweaked implements IWTFGenerator{
 	}
 
 	private void genCaveFloor(AddCustomOre newOre) {
-		int counter = 0;
 		if (cavepositions.size() > 0){
-			int chance = 16384/newOre.getPerChunk(biomeTypes);
-
-			for (int loop = 0; loop < cavepositions.size(); loop++){
-
-				if (random.nextInt(chance) == 0){
-					CavePosition pos = cavepositions.get(random.nextInt(cavepositions.size()));
-					int densityToSet = random.nextInt(3);
-					if (!WTFOresConfig.enableDenseOres){densityToSet = 0;}
-					if (genOre(world, newOre.oreBlock, newOre.metadata, pos.x, pos.floor, pos.z, densityToSet)){
-						counter++;
-					}
-				}
+			float numToGenerate = (float)newOre.getPerChunk(biomeTypes)/16384 * cavepositions.size() * (random.nextFloat()+0.5F);
+			while (numToGenerate > 1F){
+				CavePosition pos = cavepositions.get(random.nextInt(cavepositions.size()));
+				int densityToSet = random.nextInt(3);
+				if (!WTFOresConfig.enableDenseOres){densityToSet = 0;}
+				if (genOre(world, newOre.oreBlock, newOre.metadata, pos.x, pos.floor, pos.z, densityToSet)){
+					numToGenerate--;
+				}	
+			}
+			//gives a chance to generate on the remainder
+			if (random.nextFloat()>numToGenerate){
+				CavePosition pos = cavepositions.get(random.nextInt(cavepositions.size()));
+				int densityToSet = random.nextInt(3);
+				if (!WTFOresConfig.enableDenseOres){densityToSet = 0;}
+				if (genOre(world, newOre.oreBlock, newOre.metadata, pos.x, pos.floor, pos.z, densityToSet)){
+					numToGenerate--;
+				}	
 			}
 		}
 	}

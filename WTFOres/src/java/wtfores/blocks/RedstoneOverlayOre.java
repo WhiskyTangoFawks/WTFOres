@@ -5,7 +5,6 @@ import java.util.Random;
 import cpw.mods.fml.common.registry.GameRegistry;
 import wtfcore.api.BlockSets;
 import wtfcore.api.OreBlockInfo;
-import wtfcore.blocks.IAlphaMaskedBlock;
 import wtfcore.items.ItemMetadataSubblock;
 import wtfcore.utilities.LoadBlockSets;
 import wtfores.config.WTFOresConfig;
@@ -14,7 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
-public class RedstoneOverlayOre extends OverlayOre implements IAlphaMaskedBlock{
+public class RedstoneOverlayOre extends OverlayOre{
 
 	private boolean isLit;
 

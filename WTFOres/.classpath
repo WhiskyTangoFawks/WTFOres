@@ -8,5 +8,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/UBC"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/WTFCaveBiomes"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/WTFTweaks"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TextureGenerator"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

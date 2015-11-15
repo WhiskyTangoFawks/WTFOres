@@ -8,10 +8,8 @@ import wtfcore.api.AddCustomOre;
 import wtfcore.api.BlockSets;
 import wtfcore.api.IStoneRegister;
 import wtfcore.api.OreBlockInfo;
-import wtfcore.blocks.IAlphaMaskedBlock;
 import wtfcore.blocks.OreChildBlock;
 import wtfcore.items.ItemMetadataSubblock;
-import wtfcore.proxy.ClientProxy;
 import wtfcore.utilities.LoadBlockSets;
 import wtfcore.utilities.UBCblocks;
 import wtfores.WTFOres;
@@ -26,8 +24,9 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import texturegeneratorlib.TextureGeneratorLib;
 
-public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
+public class OverlayOre extends OreChildBlock
 {
 	private IIcon[] textures;
 	public static String[] vanillaStone = {"stone"};
@@ -196,7 +195,7 @@ public class OverlayOre extends OreChildBlock implements IAlphaMaskedBlock
 		textures = new IIcon[16];
 		for (int loop = 0; loop < textureNames.length; loop++){
 			textures[loop] = iconRegister.registerIcon(WTFOres.modid+":"+textureNames[loop]);
-			ClientProxy.registerBlockOverlay(textureNames[loop], parentLocations[loop], oreType, WTFOres.overlayDomain, false);
+			TextureGeneratorLib.registerBlockOverlay(this, textureNames[loop], parentLocations[loop], oreType, WTFOres.overlayDomain, false);
 		}
 	}
 
